@@ -1,2 +1,2 @@
-# Algorythms 2 Homework 2
+# Algorithms 2 Homework 2
 Жадібні алгоритми та динамічне програмування
