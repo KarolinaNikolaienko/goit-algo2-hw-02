@@ -30,6 +30,11 @@ def optimize_printing(print_jobs: List[Dict], constraints: Dict) -> Dict:
     Returns:
         Dict з порядком друку та загальним часом
     """
+    if not print_jobs or not constraints:
+        return {
+        "print_order": None,
+        "total_time": None
+    }
 
     printer_constrains = PrinterConstraints(**constraints)
 
