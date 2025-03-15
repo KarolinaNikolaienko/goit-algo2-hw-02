@@ -1,3 +1,4 @@
+from copy import copy
 from typing import List, Dict
 from collections import defaultdict
 
@@ -16,7 +17,7 @@ def rod_cutting_memo(length: int, prices: List[int], memo = None) -> Dict:
     if memo is None:
         memo = defaultdict(dict)
 
-    print(memo)
+    # print(memo)
 
     if length == 0:
         return {
@@ -36,6 +37,9 @@ def rod_cutting_memo(length: int, prices: List[int], memo = None) -> Dict:
         new_profit = rod_cutting_memo(length - i, prices, memo)
         if current_profit < prices[i - 1] + new_profit["max_profit"]:
             current_profit = prices[i - 1] + new_profit["max_profit"]
+            current_cuts = copy(new_profit["cuts"])
+            current_cuts.append(i)
+            current_number_of_cuts = len(current_cuts) - 1
 
 
     memo[length - 1] = {
@@ -150,7 +154,7 @@ def run_tests():
         print(f"Розрізи: {table_result['cuts']}")
         print(f"Кількість розрізів: {table_result['number_of_cuts']}")
 
-        # print("\\nПеревірка пройшла успішно!")
+        print("\nПеревірка пройшла успішно!")
 
 
 if __name__ == "__main__":
