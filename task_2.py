@@ -1,24 +1,54 @@
 from typing import List, Dict
 from collections import defaultdict
 
-def rod_cutting_memo(length: int, prices: List[int]) -> Dict:
+def rod_cutting_memo(length: int, prices: List[int], memo = None) -> Dict:
     """
     Знаходить оптимальний спосіб розрізання через мемоізацію
 
     Args:
         length: довжина стрижня
         prices: список цін, де prices[i] — ціна стрижня довжини i+1
-
+        memo: параметр для мемоізації даних
     Returns:
         Dict з максимальним прибутком та списком розрізів
     """
 
-    # Тут повинен бути ваш код
+    if memo is None:
+        memo = defaultdict(dict)
+
+    print(memo)
+
+    if length == 0:
+        return {
+            "max_profit": 0,
+            "cuts": [],
+            "number_of_cuts": 0
+        }
+
+    if length - 1 in memo.keys():
+        return memo[length - 1]
+
+
+    current_profit = 0
+    current_cuts = []
+    current_number_of_cuts = 0
+    for i in range(1, length + 1):
+        new_profit = rod_cutting_memo(length - i, prices, memo)
+        if current_profit < prices[i - 1] + new_profit["max_profit"]:
+            current_profit = prices[i - 1] + new_profit["max_profit"]
+
+
+    memo[length - 1] = {
+        "max_profit": current_profit,
+        "cuts": current_cuts,
+        "number_of_cuts": current_number_of_cuts
+    }
+
 
     return {
-        "max_profit": None,
-        "cuts": None,
-        "number_of_cuts": None
+        "max_profit": current_profit,
+        "cuts": current_cuts,
+        "number_of_cuts": current_number_of_cuts
     }
 
 
@@ -105,21 +135,21 @@ def run_tests():
         print(f"\nТест: {test['name']}")
         print(f"Довжина стрижня: {test['length']}")
         print(f"Ціни: {test['prices']}")
-        #
-        # # Тестуємо мемоізацію
-        # memo_result = rod_cutting_memo(test['length'], test['prices'])
-        # print("\nРезультат мемоізації:")
-        # print(f"Максимальний прибуток: {memo_result['max_profit']}")
-        # print(f"Розрізи: {memo_result['cuts']}")
-        # print(f"Кількість розрізів: {memo_result['number_of_cuts']}")
-        #
-        # # Тестуємо табуляцію
+
+        # Тестуємо мемоізацію
+        memo_result = rod_cutting_memo(test['length'], test['prices'])
+        print("\nРезультат мемоізації:")
+        print(f"Максимальний прибуток: {memo_result['max_profit']}")
+        print(f"Розрізи: {memo_result['cuts']}")
+        print(f"Кількість розрізів: {memo_result['number_of_cuts']}")
+
+        # Тестуємо табуляцію
         table_result = rod_cutting_table(test['length'], test['prices'])
         print("\nРезультат табуляції:")
         print(f"Максимальний прибуток: {table_result['max_profit']}")
         print(f"Розрізи: {table_result['cuts']}")
         print(f"Кількість розрізів: {table_result['number_of_cuts']}")
-        #
+
         # print("\\nПеревірка пройшла успішно!")
 
 
